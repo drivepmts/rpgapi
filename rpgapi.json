@@ -1,9 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "description": "This is ReadyPayGo API server for processing credit cards and eChecks",
-    "version": "1.0.0",
     "title": "ReadyPayGo API",
+    "description": "This is ReadyPayGo API server for processing credit cards and eChecks",
     "termsOfService": "https://my.readypaygo.com/terms",
     "contact": {
       "name": "API Support",
@@ -13,7 +12,8 @@
     "license": {
       "name": "Apache 2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-    }
+    },
+    "version": "1.0.0"
   },
   "servers": [
     {
@@ -23,31 +23,21 @@
   "paths": {
     "/card": {
       "post": {
+        "tags": [
+          "Credit Cards"
+        ],
         "description": "Creates a new card token.  Duplicates are allowed.",
         "operationId": "createCard",
         "parameters": [
           {
-            "in": "header",
             "name": "X-Request-ID",
+            "in": "header",
+            "description": "GUID for log tracking",
             "schema": {
               "$ref": "#/components/headers/X-REQUEST-ID"
-            },
-            "description": "GUID for log tracking"
-          }
-        ],
-        "tags": [
-          "Credit Cards"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Card"
-              }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "Successful token creation response",
@@ -59,46 +49,45 @@
               }
             }
           }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Card"
+              }
+            }
+          },
+          "required": true
         }
       }
     },
     "/card/{token_id}": {
       "put": {
+        "tags": [
+          "Credit Cards"
+        ],
         "description": "Update a credit card token",
         "operationId": "updateCard",
         "parameters": [
           {
-            "in": "header",
             "name": "X-Request-ID",
+            "in": "header",
+            "description": "GUID for log tracking",
             "schema": {
               "$ref": "#/components/headers/X-REQUEST-ID"
-            },
-            "description": "GUID for log tracking"
+            }
           },
           {
-            "in": "path",
             "name": "token_id",
+            "in": "path",
             "description": "Token ID to be removed - note: token will not be removed if there are any payment schedules associated with it.",
+            "required": true,
             "schema": {
               "$ref": "#/components/schemas/Token"
-            },
-            "required": true
-          }
-        ],
-        "tags": [
-          "Credit Cards"
-        ],
-        "requestBody": {
-          "description": "Updates an existing card token.",
-          "required": true,
-          "content": {
-            "application/x-www-form-urlencoded": {
-              "schema": {
-                "$ref": "#/components/schemas/Card"
-              }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "The resource was updated successfully."
@@ -109,32 +98,43 @@
           "404": {
             "$ref": "#/components/responses/NotFound"
           }
+        },
+        "requestBody": {
+          "description": "Updates an existing card token.",
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/Card"
+              }
+            }
+          },
+          "required": true
         }
       },
       "delete": {
+        "tags": [
+          "Credit Cards"
+        ],
         "description": "Delete a credit card token",
         "operationId": "deleteCard",
         "parameters": [
           {
-            "in": "header",
             "name": "X-Request-ID",
+            "in": "header",
+            "description": "GUID for log tracking",
             "schema": {
               "$ref": "#/components/headers/X-REQUEST-ID"
-            },
-            "description": "GUID for log tracking"
+            }
           },
           {
-            "in": "path",
             "name": "token_id",
+            "in": "path",
             "description": "Token ID to be removed - note: token will not be removed if there are any payment schedules associated with it.",
+            "required": true,
             "schema": {
               "$ref": "#/components/schemas/Token"
-            },
-            "required": true
+            }
           }
-        ],
-        "tags": [
-          "Credit Cards"
         ],
         "responses": {
           "204": {
@@ -151,31 +151,21 @@
     },
     "/check": {
       "post": {
+        "tags": [
+          "Checks"
+        ],
         "description": "Creates a new eCheck token.  Duplicates are allowed.",
         "operationId": "createCheck",
         "parameters": [
           {
-            "in": "header",
             "name": "X-Request-ID",
+            "in": "header",
+            "description": "GUID for log tracking",
             "schema": {
               "$ref": "#/components/headers/X-REQUEST-ID"
-            },
-            "description": "GUID for log tracking"
-          }
-        ],
-        "tags": [
-          "Checks"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Check"
-              }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "token response",
@@ -187,115 +177,43 @@
               }
             }
           }
-        }
-      }
-    },
-    "/check/{token_id}": {
-      "put": {
-        "description": "Update an eCheck token",
-        "operationId": "updateCheck",
-        "parameters": [
-          {
-            "in": "header",
-            "name": "X-Request-ID",
-            "schema": {
-              "$ref": "#/components/headers/X-REQUEST-ID"
-            },
-            "description": "GUID for log tracking"
-          },
-          {
-            "in": "path",
-            "name": "token_id",
-            "description": "Token ID to be removed - note: token will not be removed if there are any payment schedules associated with it.",
-            "schema": {
-              "$ref": "#/components/schemas/Token"
-            },
-            "required": true
-          }
-        ],
-        "tags": [
-          "Checks"
-        ],
+        },
         "requestBody": {
-          "required": true,
           "content": {
-            "application/x-www-form-urlencoded": {
+            "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/Check"
               }
             }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "The resource was updated successfully."
           },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFound"
-          }
-        }
-      },
-      "delete": {
-        "description": "Delete an eCheck token",
-        "operationId": "deleteCheck",
-        "parameters": [
-          {
-            "in": "header",
-            "name": "X-Request-ID",
-            "schema": {
-              "$ref": "#/components/headers/X-REQUEST-ID"
-            },
-            "description": "GUID for log tracking"
-          },
-          {
-            "in": "path",
-            "name": "token_id",
-            "description": "Token ID to be removed - note: token will not be removed if there are any payment schedules associated with it.",
-            "schema": {
-              "$ref": "#/components/schemas/Token"
-            },
-            "required": true
-          }
-        ],
-        "tags": [
-          "Checks"
-        ],
-        "responses": {
-          "204": {
-            "description": "The resource was deleted successfully."
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFound"
-          }
+          "required": true
         }
       }
     },
     "/charge/card": {
       "post": {
-        "description": "One time charge of credit card",
-        "operationId": "chargeCard",
-        "parameters": [
-          {
-            "in": "header",
-            "name": "X-Request-ID",
-            "schema": {
-              "$ref": "#/components/headers/X-REQUEST-ID"
-            },
-            "description": "GUID for log tracking"
-          }
-        ],
         "tags": [
           "Charges",
           "Credit Cards"
         ],
+        "description": "One time charge of credit card",
+        "operationId": "chargeCard",
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "description": "GUID for log tracking",
+            "schema": {
+              "$ref": "#/components/headers/X-REQUEST-ID"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/SuccessfulTransaction"
+          }
+        },
         "requestBody": {
-          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -309,35 +227,35 @@
                 ]
               }
             }
-          }
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/SuccessfulTransaction"
-          }
+          },
+          "required": true
         }
       }
     },
     "/charge/check": {
       "post": {
-        "description": "One time charge of eCheck",
-        "operationId": "chargeCheck",
-        "parameters": [
-          {
-            "in": "header",
-            "name": "X-Request-ID",
-            "schema": {
-              "$ref": "#/components/headers/X-REQUEST-ID"
-            },
-            "description": "GUID for log tracking"
-          }
-        ],
         "tags": [
           "Charges",
           "Checks"
         ],
+        "description": "One time charge of eCheck",
+        "operationId": "chargeCheck",
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "description": "GUID for log tracking",
+            "schema": {
+              "$ref": "#/components/headers/X-REQUEST-ID"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/SuccessfulTransaction"
+          }
+        },
         "requestBody": {
-          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -351,35 +269,35 @@
                 ]
               }
             }
-          }
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/SuccessfulTransaction"
-          }
+          },
+          "required": true
         }
       }
     },
     "/charge/check/{token_id}": {
       "post": {
-        "description": "One time charge of tokenized check",
-        "operationId": "chargeCheckToken",
-        "parameters": [
-          {
-            "in": "header",
-            "name": "X-Request-ID",
-            "schema": {
-              "$ref": "#/components/headers/X-REQUEST-ID"
-            },
-            "description": "GUID for log tracking"
-          }
-        ],
         "tags": [
           "Charges",
           "Checks"
         ],
+        "description": "One time charge of tokenized check",
+        "operationId": "chargeCheckToken",
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "description": "GUID for log tracking",
+            "schema": {
+              "$ref": "#/components/headers/X-REQUEST-ID"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/SuccessfulTransaction"
+          }
+        },
         "requestBody": {
-          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -393,35 +311,35 @@
                 ]
               }
             }
-          }
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/SuccessfulTransaction"
-          }
+          },
+          "required": true
         }
       }
     },
     "/charge/card/{token_id}": {
       "post": {
-        "description": "One time charge of tokenized card",
-        "operationId": "chargeCardToken",
-        "parameters": [
-          {
-            "in": "header",
-            "name": "X-Request-ID",
-            "schema": {
-              "$ref": "#/components/headers/X-REQUEST-ID"
-            },
-            "description": "GUID for log tracking"
-          }
-        ],
         "tags": [
           "Charges",
           "Credit Cards"
         ],
+        "description": "One time charge of tokenized card",
+        "operationId": "chargeCardToken",
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "description": "GUID for log tracking",
+            "schema": {
+              "$ref": "#/components/headers/X-REQUEST-ID"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/SuccessfulTransaction"
+          }
+        },
         "requestBody": {
-          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -435,17 +353,243 @@
                 ]
               }
             }
+          },
+          "required": true
+        }
+      }
+    },
+    "/check/{token_id}": {
+      "put": {
+        "tags": [
+          "Checks"
+        ],
+        "description": "Update an eCheck token",
+        "operationId": "updateCheck2",
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "description": "GUID for log tracking",
+            "schema": {
+              "$ref": "#/components/headers/X-REQUEST-ID"
+            }
+          },
+          {
+            "name": "token_id",
+            "in": "path",
+            "description": "Token ID to be removed - note: token will not be removed if there are any payment schedules associated with it.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Token"
+            }
           }
-        },
+        ],
         "responses": {
           "200": {
-            "$ref": "#/components/responses/SuccessfulTransaction"
+            "description": "The resource was updated successfully."
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/Check"
+              }
+            }
+          },
+          "required": true
+        }
+      },
+      "delete": {
+        "tags": [
+          "Checks"
+        ],
+        "description": "Delete an eCheck token",
+        "operationId": "deleteCheck",
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "description": "GUID for log tracking",
+            "schema": {
+              "$ref": "#/components/headers/X-REQUEST-ID"
+            }
+          },
+          {
+            "name": "token_id",
+            "in": "path",
+            "description": "Token ID to be removed - note: token will not be removed if there are any payment schedules associated with it.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Token"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The resource was deleted successfully."
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
           }
         }
       }
     }
   },
   "components": {
+    "schemas": {
+      "Charge": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "description": "amount being charged, in pennies",
+            "type": "integer"
+          }
+        }
+      },
+      "ChargeResult": {
+        "type": "object",
+        "properties": {
+          "transaction_id": {
+            "description": "Transaction ID returned by payment gateway",
+            "maxLength": 32,
+            "type": "string"
+          },
+          "auth_code": {
+            "description": "Authrization Code returned by payment gateway, if available",
+            "maxLength": 16,
+            "type": "string"
+          },
+          "message": {
+            "description": "Transaction success message retuned by payment gateway, if available",
+            "maxLength": 128,
+            "type": "string"
+          }
+        }
+      },
+      "Token": {
+        "type": "object",
+        "properties": {
+          "token_id": {
+            "description": "Token ID for use in tokenized payments",
+            "maxLength": 16,
+            "minLength": 12,
+            "type": "string"
+          }
+        }
+      },
+      "Check": {
+        "required": [
+          "routingNumber",
+          "accountNumber",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "routing_number": {
+            "description": "Check routing number",
+            "maxLength": 9,
+            "minLength": 9,
+            "type": "string",
+            "example": 122105155
+          },
+          "account_number": {
+            "description": "Check account number",
+            "maxLength": 12,
+            "minLength": 5,
+            "type": "string",
+            "example": 999999999999
+          },
+          "name": {
+            "description": "Account Holder's Name",
+            "maxLength": 128,
+            "type": "string"
+          }
+        }
+      },
+      "Error": {
+        "properties": {
+          "code": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "Card": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "description": "Full credit card number",
+            "maxLength": 18,
+            "type": "string",
+            "example": 4111111111111111
+          },
+          "expMonth": {
+            "description": "Expiration month of credit card 2 digits only with leading 0 if <10",
+            "maxLength": 2,
+            "minLength": 2,
+            "type": "integer",
+            "example": 5
+          },
+          "expYear": {
+            "description": "Expiration year of credit card last 2 digits only",
+            "maxLength": 2,
+            "minLength": 2,
+            "type": "integer",
+            "example": 23
+          },
+          "first": {
+            "description": "Cardholder first name",
+            "maxLength": 128,
+            "type": "string"
+          },
+          "last": {
+            "description": "Cardholder last name",
+            "maxLength": 128,
+            "type": "string"
+          },
+          "address": {
+            "description": "Cardholder address",
+            "maxLength": 128,
+            "type": "string"
+          },
+          "city": {
+            "description": "Cardholder city",
+            "maxLength": 128,
+            "type": "string"
+          },
+          "state_province": {
+            "description": "Cardholder state or province",
+            "maxLength": 64,
+            "type": "string"
+          },
+          "post_code": {
+            "description": "Cardholder postal code",
+            "maxLength": 18,
+            "minLength": 6,
+            "type": "string"
+          },
+          "country_code": {
+            "description": "Cardholder country code",
+            "maxLength": 2,
+            "minLength": 2,
+            "type": "string"
+          }
+        }
+      }
+    },
     "responses": {
       "SuccessfulTransaction": {
         "description": "Transaction was successfully run",
@@ -485,10 +629,10 @@
           "type": "object",
           "properties": {
             "guid": {
-              "type": "string",
               "format": "uuid",
-              "example": "0c07dfdc-89bd-4881-a361-673f6f08efca",
-              "description": "Globally unique conversation identifier"
+              "description": "Globally unique conversation identifier",
+              "type": "string",
+              "example": "0c07dfdc-89bd-4881-a361-673f6f08efca"
             }
           }
         }
@@ -497,157 +641,13 @@
     "securitySchemes": {
       "apiKey": {
         "type": "apiKey",
-        "in": "header",
-        "name": "X-API-KEY"
+        "name": "X-API-KEY",
+        "in": "header"
       },
       "appId": {
         "type": "apiKey",
-        "in": "header",
-        "name": "X-APP-ID"
-      }
-    },
-    "schemas": {
-      "Charge": {
-        "type": "object",
-        "properties": {
-          "amount": {
-            "type": "integer",
-            "description": "amount being charged, in pennies"
-          }
-        }
-      },
-      "ChargeResult": {
-        "type": "object",
-        "properties": {
-          "transaction_id": {
-            "type": "string",
-            "maxLength": 32,
-            "description": "Transaction ID returned by payment gateway"
-          },
-          "auth_code": {
-            "type": "string",
-            "maxLength": 16,
-            "description": "Authrization Code returned by payment gateway, if available"
-          },
-          "message": {
-            "type": "string",
-            "maxLength": 128,
-            "description": "Transaction success message retuned by payment gateway, if available"
-          }
-        }
-      },
-      "Token": {
-        "type": "object",
-        "properties": {
-          "token_id": {
-            "type": "string",
-            "minLength": 12,
-            "maxLength": 16,
-            "description": "Token ID for use in tokenized payments"
-          }
-        }
-      },
-      "Card": {
-        "type": "object",
-        "properties": {
-          "number": {
-            "type": "string",
-            "example": 4111111111111111,
-            "maxLength": 18,
-            "description": "Full credit card number"
-          },
-          "expMonth": {
-            "type": "integer",
-            "minLength": 2,
-            "maxLength": 2,
-            "description": "Expiration month of credit card 2 digits only with leading 0 if <10",
-            "example": 5
-          },
-          "expYear": {
-            "type": "integer",
-            "minLength": 2,
-            "maxLength": 2,
-            "description": "Expiration year of credit card last 2 digits only",
-            "example": 23
-          },
-          "first": {
-            "type": "string",
-            "maxLength": 128,
-            "description": "Cardholder's first name"
-          },
-          "last": {
-            "type": "string",
-            "maxLength": 128,
-            "description": "Cardholder's last name"
-          },
-          "address": {
-            "type": "string",
-            "maxLength": 128,
-            "description": "Cardholder's address"
-          },
-          "city": {
-            "type": "string",
-            "maxLength": 128,
-            "description": "Cardholder's city"
-          },
-          "state_province": {
-            "type": "string",
-            "maxLength": 64,
-            "description": "Cardholder's state or province"
-          },
-          "post_code": {
-            "type": "string",
-            "minLength": 6,
-            "maxLength": 18,
-            "description": "Cardholder's postal code"
-          },
-          "country_code": {
-            "type": "string",
-            "minLength": 2,
-            "maxLength": 2,
-            "description": "Cardholder's country code"
-          }
-        }
-      },
-      "Check": {
-        "type": "object",
-        "properties": {
-          "routing_number": {
-            "type": "string",
-            "example": 122105155,
-            "minLength": 9,
-            "maxLength": 9,
-            "description": "Check routing number"
-          },
-          "account_number": {
-            "type": "string",
-            "example": 999999999999,
-            "minLength": 5,
-            "maxLength": 12,
-            "description": "Check account number"
-          },
-          "name": {
-            "type": "string",
-            "maxLength": 128,
-            "description": "Account Holder's Name"
-          }
-        },
-        "required": [
-          "routingNumber",
-          "accountNumber",
-          "name"
-        ]
-      },
-      "Error": {
-        "properties": {
-          "code": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "message": {
-            "type": "string"
-          }
-        }
+        "name": "X-APP-ID",
+        "in": "header"
       }
     }
   }
